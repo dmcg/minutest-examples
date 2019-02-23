@@ -24,6 +24,8 @@ extension function, `partition`.
 In this installment we'll look at refactoring the (in many ways pretty arbitrary) tests that resulted into a more
 formal specification of what our code does.
 
+## The Code Under Test
+
 To remind ourselves - here is the code:
 -*/
 
@@ -40,7 +42,10 @@ private fun <T> Iterable<(T) -> Boolean>.firstMatch(item: T): ((T) -> Boolean)? 
 //`
 
 /*-
-and here are the tests:
+
+## The TDD Tests
+
+Here are the tests from the end of our TDD session.
 -*/
 
 object Context1 {
@@ -93,7 +98,11 @@ Personally, even though we've tried to be formal in the names of our tests, I fi
 in this flat list. Another problem is that the test names tell us the conditions - the 'whens', but don't actually tell
 us what the assertions mean. We can fix that with more words, but then we have a sea of text to deal with.
 
-Finally there is all that duplication. I guess that's the easiest thing to address. Let's extract a check function.
+Finally there is all that duplication.
+
+## Removing Duplication
+
+I guess that's the easiest thing to address. Let's extract a check function.
 -*/
 
 object Context2 {
@@ -143,6 +152,8 @@ object Context2 {
 That's a bit better, or at least a bit shorter. Actually our cognitive load looking at the tests is reduced, because
 we can be reasonably sure that each is doing the same thing.
 
+## Grouping into Contexts
+
 We're still left with a flat list of 6 tests though. Minutest allows the grouping of tests into contexts - let's try
 just grouping what we have.
 -*/
@@ -186,6 +197,8 @@ object Context3 {
 This helps a bit, but there is no relationship in code between the context and its name. That would be a nice feature,
 and Minutest supports this with fixtures. I think of the fixture as the world of the tests - all the state we need to
 concern ourselves with.
+
+## Adding a Fixture
 
 At the moment the fixture type is `Unit` - the one in `rootContext<Unit>`. Let's change that to be a class containing
 the items that we want to test with. This seems overkill for now, but bear with me.
@@ -333,6 +346,8 @@ You can see now that there is a direct relationship between the (nested) name of
 Not only that, but because the conditions are moved out into the contexts, the tests are free to describe just the
 result - eg `item is not in the returned lists`.
 
+## Removing More Duplication
+
 A little bit of refactoring gives the following.
 -*/
 
@@ -399,8 +414,10 @@ object Context7 {
 This is longer than the original, but, for me at least, the contexts give my brain room to consider other cases, and
 somewhere to put the tests that doesn't overwhelm the reader.
 
+## Hiding Minutest
+
 Nitpicking - I'm not happy with the deriveFixture calls there - they leak Minutest minutiae into our tests. Luckily this is
-`All Just Kotlin (TM)` and so we can make better named operations to do the job for us. I'm going with `withItems` and
+_All Just Kotlin™_ and so we can make better named operations to do the job for us. I'm going with `withItems` and
 `withPredicates`.
 
 Now our spec reads in a way that we might even show to our customers (except, perhaps, for the term `predicates`). We
@@ -501,13 +518,16 @@ object Context8 {
 }
 
 /*-
+## Conclusions
+
 I won't claim that this is a particularly good specification for our partition - I'm just finding my way with this style
 and find it hard to strike a balance between formality and comprehension. But I do know that had I tried to write a spec
 before writing any code I would have floundered - this way we TDD'd our way to working code quickly, then produced a
 more formal and comprehensive set of tests that capture more of the behaviour, with a good degree of rigour between the
 contexts and the fixtures.
 
-In the (probably) final part of this series I'll look at property-based testing of our function.
+If you liked this, please try the [bonus episode](property-based-testing-with-minutest) where I look at Property
+Based Testing the same code using Minutest.
 
 [Post updated 2019-02-22]
 -*/
