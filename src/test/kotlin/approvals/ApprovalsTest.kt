@@ -8,10 +8,18 @@ import dev.minutest.rootContext
 import java.io.File
 
 
+/**
+ * This shows the raw steps necessary to integrate Okeydoke with Minutest.
+ *
+ * See [ApprovalsTest2] for a version with less boilerplate.
+ */
 class ApprovalsTest : JUnit5Minutests {
 
     class Fixture(testDescriptor: TestDescriptor) {
-        val approver = Approver(testDescriptor.fullName().drop(1).joinToString(">"), Sources.`in`(File("src/test/kotlin"), this::class.java.`package`))
+        val approver = Approver(
+            testDescriptor.fullName().drop(1).joinToString(">"),
+            Sources.`in`(File("src/test/kotlin"), this::class.java.`package`)
+        )
     }
 
     fun tests() = rootContext<Fixture> {
@@ -26,7 +34,6 @@ class ApprovalsTest : JUnit5Minutests {
             test("in context") {
                 approver.assertApproved("kumquat")
             }
-
         }
 
         after {
