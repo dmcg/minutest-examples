@@ -252,9 +252,9 @@ object Context5 {
                     check(items, predicates, listOf(listOf(0), listOf(1, 2, 3)))
                 }
                 test("a predicate matches no item") {
-                    val items = listOf(0, 1, 2, 3)
-                    val predicates = listOf(::isNegative, ::isZero, ::isPositive)
-                    check(items, predicates, listOf(listOf(), listOf(0), listOf(1, 2, 3)))
+                    // Note that we have added a predicate to allow the same items as the other tests in this context
+                    val predicates = listOf(::isBiggerThan10, ::isNegative, ::isZero, ::isPositive)
+                    check(items, predicates, listOf(listOf(), listOf(-1), listOf(0), listOf(1, 2, 3)))
                 }
                 test("no predicates") {
                     val predicates = emptyList<(Int) -> Boolean>()
@@ -266,12 +266,10 @@ object Context5 {
                     Fixture(emptyList())
                 }
                 test("some predicates") {
-                    val items = emptyList<Int>()
                     val predicates = listOf(::isNegative, ::isZero, ::isPositive)
                     check(items, predicates, listOf(emptyList(), emptyList(), emptyList()))
                 }
                 test("no predicates") {
-                    val items = emptyList<Int>()
                     val predicates = emptyList<(Int) -> Boolean>()
                     check(items, predicates, emptyList())
                 }
@@ -318,7 +316,6 @@ object Context6 {
                 }
                 context("a predicate matches no item") {
                     deriveFixture {
-                        // Note that we have added a predicate to allow the same items as the other tests
                         parentFixture.copy(
                             predicates = listOf(::isBiggerThan10, ::isNegative, ::isZero, ::isPositive)
                         )
