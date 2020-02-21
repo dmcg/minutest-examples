@@ -1,5 +1,5 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.3.21'
+    id 'org.jetbrains.kotlin.jvm' version '1.3.61'
 }
 
 group 'com.oneeyedmen'
@@ -12,12 +12,16 @@ repositories {
 }
 
 dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-reflect"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.3.2"
-    
-    testImplementation "dev.minutest:minutest:1.5.0"
-    testImplementation "com.oneeyedmen:okeydoke:1.1.0"
+
+    testImplementation "dev.minutest:minutest:1.10.0"
+    testImplementation "com.oneeyedmen:okeydoke:1.3.0"
+    testImplementation("org.springframework.boot:spring-boot-starter-test:2.2.4.RELEASE")
+    testImplementation("org.springframework.boot:spring-boot-starter-web:2.2.4.RELEASE")
+    testImplementation("com.nhaarman:mockito-kotlin:1.6.0")
 
     testRuntime "org.junit.jupiter:junit-jupiter-engine:5.3.2"
     testRuntime "org.junit.platform:junit-platform-launcher:1.3.2"
