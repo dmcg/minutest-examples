@@ -5,6 +5,7 @@ import com.oneeyedmen.okeydoke.ApproverFactories.fileSystemApproverFactory
 import com.oneeyedmen.okeydoke.ApproverFactory
 import dev.minutest.TestContextBuilder
 import dev.minutest.TestDescriptor
+import dev.minutest.dependentFixture
 import dev.minutest.junit.JUnit5Minutests
 import dev.minutest.rootContext
 import java.io.File
@@ -44,12 +45,9 @@ inline fun <PF, reified F> TestContextBuilder<PF, F>.approvalsFixture(
     crossinline namer: (TestDescriptor) -> String = { it.fullName().drop(1).joinToString(">") },
     crossinline factory: (Unit).(approver: Approver) -> F
 ) {
-    fixture { testDescriptor ->
-        val approver = approverFactory.createApprover(namer(testDescriptor), F::class.java)
-        factory(approver).also {
-            after {
-                if (!approver.satisfactionChecked()) approver.assertSatisfied()
-            }
-        }
-    }
+    dependentFixture(
+        dependencyBuilder = { testDescriptor ->  approverFactory.createApprover(namer(testDescriptor), F::class.java) },
+        dependencyDisposer = { approver, _ -> if (!approver.satisfactionChecked()) approver.assertSatisfied() },
+        factory = { approver, _ -> factory(approver)}
+    )
 }
